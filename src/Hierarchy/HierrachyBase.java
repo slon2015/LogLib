@@ -1,5 +1,9 @@
 package Hierarchy;
 
-public class HierrachyBase {
+import java.util.*;
 
+public class HierrachyBase {
+	
+	protected LinkedList hierarchy;
+	
 }
