@@ -12,6 +12,9 @@ import Hierarchy.*;
 import Hierarchy.Nodes.Logger;
 import junit.framework.Assert;
 import Appenders.ProcessMessage;
+import Events.EventLevel;
+import Events.MessageAvailableEvent;
+
 import java.util.*;
 
 class HierarchyTest {
@@ -29,29 +32,29 @@ class HierarchyTest {
 	@Test
 	void testAppenderOnNode() {
 		Logger lg=HierarchyBase.getInstance().CreateLogger("root.logger");
-		HierarchyBase.getInstance().AddAppender("root.logger.appender1", new AppenderBase(new HashMap<String,ProcessMessage>()));
+		HierarchyBase.getInstance().AddAppender("root.logger.appender1", new AppenderBase());
 		lg.Info("Hello");
 	}
 	
 	@Test
 	void testAppenderUnderNode() {
 		Logger lg=HierarchyBase.getInstance().CreateLogger("root.logger");
-		HierarchyBase.getInstance().AddAppender("root.appender1", new AppenderBase(new HashMap<String,ProcessMessage>()));
+		HierarchyBase.getInstance().AddAppender("root.appender1", new AppenderBase());
 		lg.Info("Hello");
 	}
 	
 	@Test
 	void testAppenderWithIgnoreError() {
 		Logger lg=HierarchyBase.getInstance().CreateLogger("root.logger");
-		HashMap<String,ProcessMessage> map=new HashMap<String,ProcessMessage>();
-		map.put("Error", new ProcessMessage() {
-			
+		Appender app=new AppenderBase() {
 			@Override
-			public void Process(String Type,String Message, String Name, Appender appender) {
-				System.out.println("Message ignored");
+			public void Write(MessageAvailableEvent e) {
+				if(e.getType()!=EventLevel.Error)
+					super.Write(e);
+				else
+					System.out.println("Message ignored");
 			}
-		});
-		Appender app=new AppenderBase(map);
+		};
 		HierarchyBase.getInstance().AddAppender("root.appender1", app);
 		lg.Error("Hello");
 	}
@@ -60,15 +63,7 @@ class HierarchyTest {
 	void IgnoreParentsEvent() {
 		Logger lg=HierarchyBase.getInstance().CreateLogger("root.logger");
 		HierarchyBase.getInstance().BuildNewLevel("root.newLevel");
-		HashMap<String,ProcessMessage> map=new HashMap<String,ProcessMessage>();
-		map.put("Info", new ProcessMessage() {
-			
-			@Override
-			public void Process(String Type,String Message, String Name, Appender appender) {
-				System.out.println("Error!!!");
-			}
-		});
-		HierarchyBase.getInstance().AddAppender("root.newLevel.appender1", new AppenderBase(map));
+		HierarchyBase.getInstance().AddAppender("root.newLevel.appender1", new AppenderBase());
 		lg.Info("Hello");
 	}
 

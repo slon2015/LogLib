@@ -9,7 +9,7 @@ public class AppenderNode extends HierarchyNode{
 	public AppenderNode(String n, HierarchyNode p, Set<HierarchyNode> c,Appender appender) {
 		super(n, p, c);
 		this.appender=appender;
-		p.AddListener(appender.getListener());
+		p.AddAppender(appender);
 		// TODO Auto-generated constructor stub
 	}
 	

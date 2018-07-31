@@ -11,7 +11,13 @@ import Hierarchy.Nodes.LoggerNode;
 import Hierarchy.Nodes.StandartHierarchyLevel;
 
 public class HierarchyBase {
+	
 	final HierarchyNode rootNode=new StandartHierarchyLevel("root",null,null);
+
+	private List<HierarchyNode> hierarchy;
+
+	private static HierarchyBase instance;
+	
 	private HierarchyBase() {
 		hierarchy=new LinkedList<HierarchyNode>();
 		hierarchy.add(rootNode);
@@ -23,10 +29,10 @@ public class HierarchyBase {
 		HierarchyNode parent=instance.findNode(parentName);
 		String myName=name.substring(name.lastIndexOf(".")+1);
 		CheckForCreate(parent, myName);
-		new StandartHierarchyLevel(myName,parent,null);
+		hierarchy.add(new StandartHierarchyLevel(myName,parent,null));
 	}
 	
-	HierarchyNode findNode(String subName,Set<HierarchyNode> collection) {
+	private HierarchyNode findNode(String subName,Set<HierarchyNode> collection) {
 		if(subName.equals("root"))
 			return rootNode;
 		HierarchyNode acc=null;
@@ -39,7 +45,7 @@ public class HierarchyBase {
 		return acc;
 	}
 	
-	HierarchyNode findNode(String name) {
+	private HierarchyNode findNode(String name) {
 		StringTokenizer tokenizer=new StringTokenizer(name,".");
 		
 		HierarchyNode ret=rootNode;
@@ -52,15 +58,11 @@ public class HierarchyBase {
 		return ret;
 	}
 	
-	private static HierarchyBase instance;
-	
 	public static HierarchyBase getInstance() {
 		if(instance==null)
 			instance=new HierarchyBase();
 		return instance;
 	}
-	
-	private List<HierarchyNode> hierarchy;
 	
 	public Set<String> getChildrenOf(String name) {
 		HierarchyNode parent=findNode(name);
@@ -73,6 +75,7 @@ public class HierarchyBase {
 		String myName=name.substring(name.lastIndexOf(".")+1);
 		CheckForCreate(parent, myName);
 		Logger ret=(Logger) new LoggerNode(myName,parent,null);
+		hierarchy.add((LoggerNode)ret);
 		return ret;
 	}
 
@@ -88,6 +91,6 @@ public class HierarchyBase {
 		HierarchyNode parent=instance.findNode(parentName);
 		String myName=name.substring(name.lastIndexOf(".")+1);
 		CheckForCreate(parent, myName);
-		new AppenderNode(myName,parent,null,appender);
+		hierarchy.add(new AppenderNode(myName,parent,null,appender));
 	}
 }

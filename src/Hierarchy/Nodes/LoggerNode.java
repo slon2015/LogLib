@@ -3,6 +3,7 @@ package Hierarchy.Nodes;
 import java.util.Set;
 
 import Appenders.Appender;
+import Events.EventLevel;
 
 public class LoggerNode extends HierarchyNode implements Logger{
 	public LoggerNode(String n, HierarchyNode p, Set<HierarchyNode> c) {
@@ -16,22 +17,22 @@ public class LoggerNode extends HierarchyNode implements Logger{
 	}
 	
 	public void Info(String Message) {
-		fireMessageAvailableEvent("Info",Message,fullName);
+		fireMessageAvailableEvent(EventLevel.Info,Message,fullName);
 	}
 	
 	public void Debug(String Message) {
-		fireMessageAvailableEvent("Debug",Message,fullName);
+		fireMessageAvailableEvent(EventLevel.Debug,Message,fullName);
 	}
 	
 	public void Warning(String Message) {
-		fireMessageAvailableEvent("Warning",Message,fullName);
+		fireMessageAvailableEvent(EventLevel.Warn,Message,fullName);
 	}
 	
 	public void Error(String Message) {
-		fireMessageAvailableEvent("Error",Message,fullName);
+		fireMessageAvailableEvent(EventLevel.Error,Message,fullName);
 	}
 	
-	public void CustomLevelMessage(String Level,String Message) {
-		fireMessageAvailableEvent(Level,Message,fullName);
+	public void Fatal(String Message) {
+		fireMessageAvailableEvent(EventLevel.Fatal,Message,fullName);
 	}
 }

@@ -5,10 +5,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Appenders.Appender;
+import Events.EventLevel;
 import Events.MessageAvailableEvent;
 import Events.MessageAvailableEventListener;
 
 public abstract class HierarchyNode {
+	private HashSet<Appender> Appenders;
+	private HierarchyNode parent;
+	private Set<HierarchyNode> childrens;
+	protected String fullName;
+	private final String name;
+	
 	public HierarchyNode(String n,HierarchyNode p,Set<HierarchyNode> c) {
 		name=n;
 		childrens=new HashSet<HierarchyNode>();
@@ -19,8 +26,9 @@ public abstract class HierarchyNode {
 			p.AddChildren(this);
 		if(parent==null)
 			fullName=name;
+		Appenders=new HashSet<Appender>();
 	}
-	private HierarchyNode parent;
+	
 	public HierarchyNode getParent() {
 		return parent;
 	}
@@ -29,41 +37,34 @@ public abstract class HierarchyNode {
 		childrens.add(node);
 		node.parent=this;
 		node.fullName=fullName+"."+node.name;
-		if(node instanceof Appender)
-			AddListener(((Appender)node).getListener());
 	}
 	
-	private Set<HierarchyNode> childrens;
 	public Set<HierarchyNode> getChildrens(){
 		return childrens;
 	}
-	protected String fullName;
 	
-	private final String name;
 	public String getName() {
 		return name;
 	}
 	
-	public void AddListener(MessageAvailableEventListener listener) {
-		if(!listeners.contains(listener))
-			listeners.add(listener);
+	public void AddAppender(Appender appender) {
+		if(!Appenders.contains(appender))
+			Appenders.add(appender);
 	}
 	
-	public void RemoveListener(MessageAvailableEventListener listener) {
-		if(listeners.contains(listener))
-			listeners.remove(listener);
+	public void RemoveAppender(Appender appender) {
+		if(Appenders.contains(appender))
+			Appenders.remove(appender);
 	}
 	
-	ArrayList<MessageAvailableEventListener> listeners = new ArrayList<MessageAvailableEventListener>();
-	
-	void fireMessageAvailableEvent(String Type,String Message,String Name) {
+	void fireMessageAvailableEvent(EventLevel Type,String Message,String Name) {
 		MessageAvailableEvent eventObject=new MessageAvailableEvent(Type,Message,Name);
 		fireMessageAvailableEvent(eventObject);
 	}
 	
 	void fireMessageAvailableEvent(MessageAvailableEvent eventObject) {
-		for(MessageAvailableEventListener listener:listeners) {
-			listener.MessageAvailable(eventObject);
+		for(Appender listener:Appenders) {
+			listener.Write(eventObject);
 		}
 		if(parent!=null)
 			parent.fireMessageAvailableEvent(eventObject);
