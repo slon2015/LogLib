@@ -11,7 +11,6 @@ import Appenders.AppenderBase;
 import Hierarchy.*;
 import Hierarchy.Nodes.Logger;
 import junit.framework.Assert;
-import Appenders.ProcessMessage;
 import Events.EventLevel;
 import Events.MessageAvailableEvent;
 

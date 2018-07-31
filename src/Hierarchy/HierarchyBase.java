@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import Appenders.Appender;
-import Hierarchy.Nodes.AppenderNode;
 import Hierarchy.Nodes.HierarchyNode;
 import Hierarchy.Nodes.Logger;
 import Hierarchy.Nodes.LoggerNode;
@@ -12,7 +11,7 @@ import Hierarchy.Nodes.StandartHierarchyLevel;
 
 public class HierarchyBase {
 	
-	final HierarchyNode rootNode=new StandartHierarchyLevel("root",null,null);
+	private final HierarchyNode rootNode=new StandartHierarchyLevel("root",null,null);
 
 	private List<HierarchyNode> hierarchy;
 
@@ -89,8 +88,6 @@ public class HierarchyBase {
 	public void AddAppender(String name,Appender appender){
 		String parentName=name.substring(0, name.lastIndexOf("."));
 		HierarchyNode parent=instance.findNode(parentName);
-		String myName=name.substring(name.lastIndexOf(".")+1);
-		CheckForCreate(parent, myName);
-		hierarchy.add(new AppenderNode(myName,parent,null,appender));
+		parent.AddAppender(appender);
 	}
 }
