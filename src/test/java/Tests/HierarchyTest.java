@@ -1,16 +1,16 @@
 package Tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import Appenders.Appender;
 import Appenders.AppenderBase;
 import Hierarchy.*;
 import Hierarchy.Nodes.Logger;
-import junit.framework.Assert;
 import Events.EventLevel;
 import Events.MessageAvailableEvent;
 
@@ -18,14 +18,13 @@ import java.util.*;
 
 class HierarchyTest {
 
-	@SuppressWarnings("deprecation")
 	@Test
 	void testBuildNewLevel() {
 		String newNodeName="test";
 		HierarchyBase.getInstance().BuildNewLevel("root."+newNodeName);
 		Set<String> ret=HierarchyBase.getInstance().getChildrenOf("root");
-		Assert.assertEquals(1, ret.size());
-		Assert.assertTrue(ret.contains(newNodeName));
+		assertEquals(1, ret.size());
+		assertTrue(ret.contains(newNodeName));
 	}
 	
 	@Test
